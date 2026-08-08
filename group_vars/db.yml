@@ -1,0 +1,5 @@
+---
+db_name: dbappphp
+db_user: app_user
+db_password: "CAMBIAR_EN_PRODUCCION"
+db_bind_address: "0.0.0.0"

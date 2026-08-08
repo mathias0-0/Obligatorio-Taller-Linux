@@ -1,0 +1,4 @@
+---
+app_name: dbappphp
+app_repo: "https://github.com/emverdes/dbappphp.git"
+app_port: 80
