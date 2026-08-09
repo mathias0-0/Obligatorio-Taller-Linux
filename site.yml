@@ -1,0 +1,12 @@
+---
+- name: Configurar servidor de base de datos
+  hosts: db
+  become: true
+  roles:
+    - mariadb
+
+- name: Configurar servidor de aplicación
+  hosts: app
+  become: true
+  roles:
+    - apache_php
