@@ -1,0 +1,37 @@
+---
+- name: Instalar Apache
+  ansible.builtin.dnf:
+    name: httpd
+    state: present
+
+- name: Instalar PHP y extensión MariaDB
+  ansible.builtin.dnf:
+    name:
+      - php
+      - php-mysqlnd
+    state: present
+
+- name: Asegurar que Apache esté iniciado
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: Instalar Git
+  ansible.builtin.dnf:
+    name: git
+    state: present
+
+- name: Descargar aplicación
+  ansible.builtin.git:
+    repo: https://github.com/emverdes/dbappphp.git
+    dest: /var/www/html
+    version: main
+    force: true
+
+- name: Permitir HTTP en firewalld
+  ansible.posix.firewalld:
+    service: http
+    permanent: true
+    immediate: true
+    state: enabled
