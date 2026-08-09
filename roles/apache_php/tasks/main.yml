@@ -24,10 +24,40 @@
 
 - name: Descargar aplicación
   ansible.builtin.git:
-    repo: https://github.com/emverdes/dbappphp.git
-    dest: /var/www/html
+    repo: "{{ app_repo }}"
+    dest: /opt/dbappphp
     version: main
-    force: true
+
+- name: Crear directorio web
+  ansible.builtin.file: 
+    path: /var/www/html 
+    state: directory 
+    owner: root 
+    group: apache 
+    mode: "0755"
+
+
+
+- name: Copiar archivos de la aplicación
+  ansible.builtin.copy: 
+    src: "/opt/dbappphp/{{ item }}"
+    dest: "/var/www/html/{{ item }}"
+    remote_src: true 
+    owner: root 
+    group: apache 
+    mode: "0644" 
+  loop: 
+    - cumpleanios.sql 
+    - README.md 
+    - LICENSE
+
+- name: Configurar conexión de la aplicación
+  ansible.builtin.template:
+    src: cumple.php.j2 
+    dest: /var/www/html/cumple.php 
+    owner: root 
+    group: apache 
+    mode: "0644"
 
 - name: Permitir HTTP en firewalld
   ansible.posix.firewalld:
@@ -35,3 +65,11 @@
     permanent: true
     immediate: true
     state: enabled
+
+- name: Configurar conexión de la aplicación
+  ansible.builtin.template:
+    src: cumple.php.j2
+    dest: /var/www/html/cumple.php
+    owner: root
+    group: apache
+    mode: "0644"
