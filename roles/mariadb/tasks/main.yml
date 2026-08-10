@@ -16,17 +16,22 @@
     name: python3-pymysql
     state: present
 
-- name: Configurar acceso remoto de MariaDB
-  ansible.builtin.template:
-    src: 50-server.cnf.j2
-    dest: /etc/mysql/mariadb.conf.d/50-server.cnf
-    owner: root
-    group: root
-    mode: "0644"
-  notify: Reiniciar MariaDB
+- name: Instalar Git
+  ansible.builtin.apt:
+    name: git
+    state: present
 
-- name: Reiniciar MariaDB para aplicar configuración
-  ansible.builtin.meta: flush_handlers
+- name: Descargar aplicación
+  ansible.builtin.git:
+    repo: "{{ app_repo }}"
+    dest: /opt/dbappphp
+    version: main
+
+- name: Crear base de datos
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
 
 - name: Crear usuario de la aplicación
   community.mysql.mysql_user:
@@ -37,19 +42,26 @@
     state: present
     login_unix_socket: /run/mysqld/mysqld.sock
 
-- name: Copiar schema SQL al servidor MariaDB
+- name: Copiar SQL de la aplicación
   ansible.builtin.copy:
-    src: schema.sql
-    dest: /tmp/schema.sql
+    src: /opt/dbappphp/cumpleanios.sql
+    dest: /tmp/cumpleanios.sql
+    remote_src: true
     owner: root
     group: root
     mode: "0600"
+
+- name: Corregir sintaxis del SQL
+  ansible.builtin.lineinfile:
+    path: /tmp/cumpleanios.sql
+    regexp: '^DROP DATABASE cumples IF EXISTS;'
+    line: 'DROP DATABASE IF EXISTS cumples;'
 
 - name: Importar base de datos y datos iniciales
   community.mysql.mysql_db:
     name: "{{ db_name }}"
     state: import
-    target: /tmp/schema.sql
+    target: /tmp/cumpleanios.sql
     login_unix_socket: /run/mysqld/mysqld.sock
 
 - name: Permitir SSH
