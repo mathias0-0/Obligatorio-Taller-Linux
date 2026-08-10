@@ -1,7 +1,11 @@
 ---
 - name: Instalar MariaDB Server
   ansible.builtin.apt:
-    name: mariadb-server
+    name:
+      - mariadb-server
+      - python3-pymysql
+      - git
+      - ufw 
     state: present
     update_cache: true
 
@@ -10,11 +14,6 @@
     name: mariadb
     state: started
     enabled: true
-
-- name: Instalar dependencia Python para MariaDB
-  ansible.builtin.apt:
-    name: python3-pymysql
-    state: present
 
 - name: Instalar Git
   ansible.builtin.apt:
@@ -26,6 +25,13 @@
     repo: "{{ app_repo }}"
     dest: /opt/dbappphp
     version: main
+
+- name: Configurar MariaDB para aceptar conexiones de red
+  ansible.builtin.lineinfile:
+    path: /etc/mysql/mariadb.conf.d/50-server.cnf
+    regexp: '^bind-address'
+    line: 'bind-address = {{ db_bind_address }}'
+  notify: Reiniciar MariaDB
 
 - name: Crear base de datos
   community.mysql.mysql_db:
@@ -64,11 +70,12 @@
     target: /tmp/cumpleanios.sql
     login_unix_socket: /run/mysqld/mysqld.sock
 
-- name: Permitir SSH
+- name: Permitir SSH (Desde el controlador)
   community.general.ufw:
     rule: allow
     port: "22"
     proto: tcp
+    from_ip: "{{ controller_ip }}"
 
 - name: Permitir MariaDB desde el servidor de aplicación
   community.general.ufw:
