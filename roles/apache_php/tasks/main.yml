@@ -59,11 +59,17 @@
     cmd: restorecon -Rv /var/www/html
   when: selinux_context.changed
 
+- name: Permitir conexiones de Apache a MariaDB
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect_db
+    state: true
+    persistent: true
+
 - name: Configurar conexión de la aplicación
   ansible.builtin.lineinfile:
     path: /var/www/html/cumple.php
     regexp: '^\$conexion = new mysqli'
-    line: '$conexion = new mysqli("{{ db_host }}", "{{ db_user }}", "{{ db_password }}", "{{ db_name }}");'
+    line: '\$conexion = new mysqli("{{ db_host }}", "{{ db_user }}", "{{ db_password }}", "{{ db_name }}");'
 
 - name: Permitir HTTP en firewalld
   ansible.posix.firewalld:
