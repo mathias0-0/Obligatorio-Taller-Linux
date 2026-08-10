@@ -1,14 +1,11 @@
 ---
-- name: Instalar Apache
+- name: Instalar Apache, PHP y herramientas SELinux
   ansible.builtin.dnf:
-    name: httpd
-    state: present
-
-- name: Instalar PHP y extensión MariaDB
-  ansible.builtin.dnf:
-    name:
+    name: 
+      - httpd
       - php
       - php-mysqlnd
+      - policycoreutils-python-utils
     state: present
 
 - name: Asegurar que Apache esté iniciado
@@ -49,6 +46,18 @@
     - cumpleanios.sql 
     - README.md 
     - LICENSE
+
+- name: Configurar contexto SELinux para la aplicación
+  community.general.sefcontext:
+    target: '/var/www/html(/.*)?'
+    setype: httpd_sys_content_t
+    state: present
+  register: selinux_context
+
+- name: Aplicar contexto SELinux
+  ansible.builtin.command:
+    cmd: restorecon -Rv /var/www/html
+  when: selinux_context.changed
 
 - name: Configurar conexión de la aplicación
   ansible.builtin.lineinfile:
