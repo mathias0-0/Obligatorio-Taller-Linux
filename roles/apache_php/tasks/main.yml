@@ -36,8 +36,6 @@
     group: apache 
     mode: "0755"
 
-
-
 - name: Copiar archivos de la aplicación
   ansible.builtin.copy: 
     src: "/opt/dbappphp/{{ item }}"
@@ -47,17 +45,16 @@
     group: apache 
     mode: "0644" 
   loop: 
+    - cumple.php
     - cumpleanios.sql 
     - README.md 
     - LICENSE
 
 - name: Configurar conexión de la aplicación
-  ansible.builtin.template:
-    src: cumple.php.j2 
-    dest: /var/www/html/cumple.php 
-    owner: root 
-    group: apache 
-    mode: "0644"
+  ansible.builtin.lineinfile:
+    path: /var/www/html/cumple.php
+    regexp: '^\$conexion = new mysqli'
+    line: '$conexion = new mysqli("{{ db_host }}", "{{ db_user }}", "{{ db_password }}", "{{ db_name }}");'
 
 - name: Permitir HTTP en firewalld
   ansible.posix.firewalld:
@@ -65,11 +62,3 @@
     permanent: true
     immediate: true
     state: enabled
-
-- name: Configurar conexión de la aplicación
-  ansible.builtin.template:
-    src: cumple.php.j2
-    dest: /var/www/html/cumple.php
-    owner: root
-    group: apache
-    mode: "0644"
