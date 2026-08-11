@@ -99,7 +99,27 @@ db:
 
 
 
+<br>
+<br>
 
+
+## Ejecución
+
+Con el inventario y las variables ya ajustados:
+
+
+ansible-playbook -i inventory/hosts.yml site.yml --ask-become-pass
+
+
+
+("--ask-become-pass" solo hace falta si el usuario SSH necesita contraseña para sudo. Si ya tiene privilegios sin contraseña se puede omitir.)
+
+
+
+El playbook:
+
+1. **Configura el servidor de base de datos:** instala MariaDB, crea la base "cumples", la tabla "cumpleanios" con datos iniciales, el usuario de la aplicación, y habilita el firewall (UFW) permitiendo únicamente SSH desde el controlador y MariaDB desde el servidor de aplicación.
+2. **Configura el servidor de aplicación:** instala Apache y PHP, despliega "cumple.php" con los datos de conexión inyectados desde las variables, ajusta el contexto de SELinux, y habilita el firewall (firewalld) para tráfico HTTP.
 
 
 
