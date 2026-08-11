@@ -137,8 +137,26 @@ o
 curl http://localhost/cumple.php
 (esta última en caso de que lo estés ejecutando dentro del servidor de la app).
 
-
 Debería devolver una tabla HTML con los cumpleaños cargados en la base de datos.
+
+<br>
+<br>
+
+## Ejecución idempotente
+
+Correr el playbook una segunda vez reportará algunos cambios referentes al clonado y modificación de archivos del repositorio. Todo el resto de tareas deberían no reportar cambios.
+
+
+ansible-playbook -i inventory/hosts.yml site.yml
+
+<br>
+<br>
+
+## Notas de seguridad
+
+- No se almacenan contraseñas reales ni claves privadas en este repositorio.
+- El acceso a MariaDB por red queda restringido únicamente a la IP del servidor de aplicación (regla de UFW + usuario de MariaDB limitado a ese host).
+- El acceso HTTP al servidor de aplicación se habilita únicamente a través de firewalld.
 
 
 
