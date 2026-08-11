@@ -32,4 +32,36 @@ La aplicación "dbappphp" corre en el servidor CentOS y consulta a través de la
 
 
 
+## Estructura del repositorio
+
+
+- site.yml
+- requirements.yml             
+- inventory/
+   - hosts.yml                
+- group_vars/
+   - all.yml                  
+   - app.yml                  
+   - db.yml                   
+- roles/
+   - apache_php/
+      - tasks/main.yml       
+   - mariadb/
+      - tasks/main.yml       
+      - handlers/main.yml    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
