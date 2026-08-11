@@ -3,5 +3,5 @@ db_name: cumples
 db_user: app_user
 db_password: "CAMBIAR_EN_PRODUCCION"
 db_allowed_host: "192.168.1.11"
-db_bind_address: "192.168.1.11"
+db_bind_address: "192.168.1.12"
 controller_ip: "192.168.1.10"
