@@ -122,9 +122,23 @@ El playbook:
 2. **Configura el servidor de aplicación:** instala Apache y PHP, despliega "cumple.php" con los datos de conexión inyectados desde las variables, ajusta el contexto de SELinux, y habilita el firewall (firewalld) para tráfico HTTP.
 
 
+<br>
+<br>
+
+## Verificación
+
+El playbook valida al final que la aplicación responda por HTTP (tarea llamada "Validar que la aplicación responda"). También se puede comprobar manualmente usando un curl:
 
 
+curl http://<IP del servidor de aplicación>/cumple.php
 
+o
+
+curl http://localhost/cumple.php
+(esta última en caso de que lo estés ejecutando dentro del servidor de la app).
+
+
+Debería devolver una tabla HTML con los cumpleaños cargados en la base de datos.
 
 
 
