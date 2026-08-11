@@ -86,5 +86,5 @@
 
 - name: Validar que la aplicación responda
   ansible.builtin.uri:
-    url: "http://{{ ansible_host }}"
+    url: "http://{{ ansible_host }}/cumple.php"
     status_code: 200
