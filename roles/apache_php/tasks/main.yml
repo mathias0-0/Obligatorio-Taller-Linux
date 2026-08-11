@@ -83,3 +83,8 @@
     permanent: true
     immediate: true
     state: enabled
+
+- name: Validar que la aplicación responda
+  ansible.builtin.uri:
+    url: "http://{{ ansible_host }}"
+    status_code: 200
