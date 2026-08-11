@@ -69,7 +69,7 @@
   ansible.builtin.lineinfile:
     path: /var/www/html/cumple.php
     regexp: '^\$conexion = new mysqli'
-    line: '\$conexion = new mysqli("{{ db_host }}", "{{ db_user }}", "{{ db_password }}", "{{ db_name }}");'
+    line: '$conexion = new mysqli("{{ db_host }}", "{{ db_user }}", "{{ db_password }}", "{{ db_name }}");'
 
 - name: Permitir HTTP en firewalld
   ansible.posix.firewalld:
