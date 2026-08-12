@@ -38,6 +38,7 @@
     src: "/opt/dbappphp/{{ item }}"
     dest: "/var/www/html/{{ item }}"
     remote_src: true 
+    force: false
     owner: root 
     group: apache 
     mode: "0644" 
