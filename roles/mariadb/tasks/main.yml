@@ -53,6 +53,7 @@
     src: /opt/dbappphp/cumpleanios.sql
     dest: /tmp/cumpleanios.sql
     remote_src: true
+    force: false
     owner: root
     group: root
     mode: "0600"
